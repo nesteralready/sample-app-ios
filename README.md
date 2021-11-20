@@ -2,7 +2,7 @@
 
 Simple translate app 
 
-Swift 5.*
-VIPER
-No 3rd party libraries
-Core Data
+Swift 5.* \n
+VIPER \n
+No 3rd party libraries \n
+Core Data \n
