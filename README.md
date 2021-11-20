@@ -6,6 +6,7 @@ Simple translate app
 - VIPER
 - No 3rd party libraries
 - Core Data 
+- ABBYY Lingvo public API
 - Error handling
  <p>
 <img src="https://user-images.githubusercontent.com/14956619/142731536-98a6f108-bd6c-4d77-af24-f417eb3b3125.png" width="161" height="354">
