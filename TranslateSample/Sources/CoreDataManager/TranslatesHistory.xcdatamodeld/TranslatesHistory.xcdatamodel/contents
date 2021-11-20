@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="18154" systemVersion="20C69" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="DBTranslate" representedClassName="DBTranslate" syncable="YES" codeGenerationType="class">
+        <attribute name="dictionaryName" attributeType="String"/>
+        <attribute name="original" attributeType="String"/>
+        <attribute name="translated" attributeType="String"/>
+        <fetchedProperty name="fetchedProperty" optional="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="DBTranslate"/>
+        </fetchedProperty>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="original"/>
+                <constraint value="translated"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <elements>
+        <element name="DBTranslate" positionX="-63" positionY="-18" width="128" height="95"/>
+    </elements>
+</model>
