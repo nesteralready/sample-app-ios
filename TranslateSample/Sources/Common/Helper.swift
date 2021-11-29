@@ -7,6 +7,8 @@
 
 import UIKit
 
+// Всплывающий баннер снизу. Показывает ошибку с сервера. 
+
 func showToast(message : String, duration: TimeInterval = 4.0, delay: TimeInterval = 2.5, vc: UIViewController) {
 
     let toast: UIButton = {

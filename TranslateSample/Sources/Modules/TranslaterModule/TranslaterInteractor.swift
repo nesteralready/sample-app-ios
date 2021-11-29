@@ -8,7 +8,7 @@
 import Foundation
 
 protocol TranslaterInteractorProtocol {
-    init(presenter: TranslaterPresenterProtocol)
+    init(presenter: TranslaterPresenterProtocol & OutputTranslatorInteractorProtocol, networkManager: NetworkManagerProtocol)
     func getTranslateRequest(with text: String)
 }
 
@@ -16,45 +16,30 @@ final class TranslaterInteractor: TranslaterInteractorProtocol {
     
     // MARK: - Private Methods
     
-    private weak var presenter: TranslaterPresenterProtocol?
-    
-    private lazy var networkManager = NetworkManager()
+    private weak var presenter: (TranslaterPresenterProtocol & OutputTranslatorInteractorProtocol)?
     
     private lazy var coreDataManager = CoreDataManager.shared
     
+    private var networkManager: NetworkManagerProtocol?
+    
     // MARK: - Init
     
-    init(presenter: TranslaterPresenterProtocol) {
+    init(presenter: TranslaterPresenterProtocol & OutputTranslatorInteractorProtocol, networkManager: NetworkManagerProtocol) {
         self.presenter = presenter
+        self.networkManager = networkManager
     }
     
     func getTranslateRequest(with text: String) {
-        
-        networkManager.getAuthentificationToken { result in
+        networkManager?.getAuthentificationToken { result in
             switch result {
             case .failure(let error):
-                switch error{
-                case .noAuth:
-                    self.presenter?.errNoAuth()
-                case .internalError:
-                    self.presenter?.errInternal()
-                default:
-                    self.presenter?.errInternal()
-                }
+                self.presenter?.errTranslationFetched(with: error)
             case .success(let token):
-                
-                self.networkManager.token = token
-                self.networkManager.requestTranslate(with: text) { result in
+                self.networkManager?.token = token
+                self.networkManager?.requestTranslate(with: text) { result in
                     switch result {
                     case .failure(let error):
-                        switch error {
-                        case .internalError:
-                            self.presenter?.errInternal()
-                        case .noAuth:
-                            self.presenter?.errNoAuth()
-                        case .noTranslateOrDictionary:
-                            self.presenter?.errNoTranslation()
-                        }
+                        self.presenter?.errTranslationFetched(with: error)
                     case .success(let translation):
                         self.presenter?.translationCompletlyFetched(translation: translation)
                         self.saveTranslationInCoreData(translation: translation)

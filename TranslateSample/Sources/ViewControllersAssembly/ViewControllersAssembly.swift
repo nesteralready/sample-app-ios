@@ -12,8 +12,9 @@ final class ViewControllerAssembly: ViewControllerAssemblyProtocol {
     func makeRootViewController(router: TranslaterRouterProtocol) -> UIViewController {
         let viewController = TranslaterViewController()
         let presenter = TranslaterPresenter(view: viewController)
-        let interactor = TranslaterInteractor(presenter: presenter)
-        
+        let networkManager = NetworkManager()
+        let interactor = TranslaterInteractor(presenter: presenter,
+                                              networkManager: networkManager)
         viewController.presenter = presenter
         presenter.interactor = interactor
         presenter.router = router

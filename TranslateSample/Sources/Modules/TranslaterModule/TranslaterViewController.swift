@@ -9,9 +9,7 @@ import UIKit
 
 protocol TranslaterViewProtocol: AnyObject {
     func onTranslateCompletlyFetched(translation: String)
-    func errTranslateDataFetched()
-    func errNoTranslation()
-    func errAuthorization()
+    func errDataFetch(with errorMessage: String)
 }
 
 final class TranslaterViewController: UIViewController {
@@ -69,21 +67,26 @@ final class TranslaterViewController: UIViewController {
     }
     
     private func setupConstraints() {
-        let inputTextConstraints = [inputTextView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
-                                   inputTextView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
-                                   inputTextView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-                                   inputTextView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height / 4)]
+        let inputTextConstraints = [
+            inputTextView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
+            inputTextView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
+            inputTextView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            inputTextView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height / 4)
+        ]
         
-        let translateButtonConstraints = [translateButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                                          translateButton.widthAnchor.constraint(equalToConstant: 200),
-                                          translateButton.topAnchor.constraint(equalTo: inputTextView.bottomAnchor, constant: 20),
-                                          translateButton.heightAnchor.constraint(equalToConstant: 60)]
+        let translateButtonConstraints = [
+            translateButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            translateButton.widthAnchor.constraint(equalToConstant: 200),
+            translateButton.topAnchor.constraint(equalTo: inputTextView.bottomAnchor, constant: 20),
+            translateButton.heightAnchor.constraint(equalToConstant: 60)
+        ]
         
-        let outputTextConstraints = [outputView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
-                                    outputView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
-                                    outputView.topAnchor.constraint(equalTo: translateButton.bottomAnchor, constant: 20),
-                                    outputView.heightAnchor.constraint(equalToConstant:  UIScreen.main.bounds.height / 4)]
-        
+        let outputTextConstraints = [
+            outputView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
+            outputView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
+            outputView.topAnchor.constraint(equalTo: translateButton.bottomAnchor, constant: 20),
+            outputView.heightAnchor.constraint(equalToConstant:  UIScreen.main.bounds.height / 4)
+        ]
         
         NSLayoutConstraint.activate(inputTextConstraints)
         NSLayoutConstraint.activate(translateButtonConstraints)
@@ -112,19 +115,12 @@ final class TranslaterViewController: UIViewController {
 // MARK: - TranslaterView
 
 extension TranslaterViewController: TranslaterViewProtocol {
-    func errNoTranslation() {
-        showToast(message: "word or dictionary not found", vc: self)
-    }
-    
-    func errTranslateDataFetched() {
-        showToast(message: "internal error", vc: self)
+    func errDataFetch(with errorMessage: String) {
+        showToast(message: errorMessage, vc: self)
     }
     
     func onTranslateCompletlyFetched(translation: String) {
         outputView.text = translation
     }
     
-    func errAuthorization() {
-        showToast(message: "authorizationn error", vc: self)
-    }
 }

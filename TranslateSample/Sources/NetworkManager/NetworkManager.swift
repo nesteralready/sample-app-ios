@@ -13,7 +13,13 @@ public enum FetchError: Error {
     case internalError
 }
 
-final class NetworkManager {
+protocol NetworkManagerProtocol: AnyObject {
+    var token: String? { get set }
+    func requestTranslate(with word: String, completion: ( (Result<TranslaterModel, FetchError>) -> Void)?)
+    func getAuthentificationToken(completion: @escaping (Result<String, FetchError>) -> Void)
+}
+
+final class NetworkManager: NetworkManagerProtocol {
     
     // MARK: - Public properties
     
@@ -23,9 +29,9 @@ final class NetworkManager {
     
     private let apiKey = "MThiNzA1NzQtOGU0NS00MzRjLTg1Y2ItMTc4ZDA1Y2Q3M2YwOjQyOTk4NTQ0MDc0MjQ2ZmY5MDU2ODQwOWRiZjVmNTM1"
     
-    private let url_auth = "https://developers.lingvolive.com/api/v1.1/authenticate"
+    private let urlAuth = "https://developers.lingvolive.com/api/v1.1/authenticate"
     
-    private let url_translate = "https://developers.lingvolive.com/api/v1/Minicard"
+    private let urlTranslate = "https://developers.lingvolive.com/api/v1/Minicard"
     
     private let srcLang = Languages.en.rawValue
     
@@ -35,13 +41,13 @@ final class NetworkManager {
     
     // MARK: - Public Methods
     
-    public func requestTranslate(with word: String, completion: ( (Result<TranslaterModel, FetchError>) -> Void)? = nil){
+    public func requestTranslate(with word: String, completion: ( (Result<TranslaterModel, FetchError>) -> Void)? = nil) {
         guard let token = token else {
             completion?(.failure(.noAuth))
             return
         }
         
-        guard var components = URLComponents(string: url_translate) else {
+        guard var components = URLComponents(string: urlTranslate) else {
             completion?(.failure(.internalError))
             return
         }
@@ -84,7 +90,7 @@ final class NetworkManager {
             return
         }
         
-        guard let url = URL(string: url_auth) else {
+        guard let url = URL(string: urlAuth) else {
             return completion(.failure(.noAuth))
         }
         

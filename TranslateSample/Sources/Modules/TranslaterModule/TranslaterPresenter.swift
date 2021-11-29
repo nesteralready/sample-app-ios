@@ -11,26 +11,28 @@ protocol TranslaterPresenterProtocol: AnyObject {
     init(view: TranslaterViewProtocol)
     func historyButtonDidTapped()
     func sendRequest(with text: String)
+}
+
+protocol OutputTranslatorInteractorProtocol: AnyObject {
     func translationCompletlyFetched(translation: TranslaterModel)
-    
-    func errNoAuth()
-    func errNoTranslation()
-    func errInternal()
+    func errTranslationFetched(with error: FetchError)
 }
 
 final class TranslaterPresenter: TranslaterPresenterProtocol {
  
-    // MARK: Public Properties
+    // MARK: - Public Properties
     
     public weak var view: TranslaterViewProtocol?
     public var interactor: TranslaterInteractorProtocol?
     public var router: TranslaterRouterProtocol?
     
-    // MARK: Init
+    // MARK: - Init
     
     required init(view: TranslaterViewProtocol) {
         self.view = view
     }
+    
+    // MARK: - Public Methods
     
     func historyButtonDidTapped() {
         router?.openHistoryViewController()
@@ -39,6 +41,14 @@ final class TranslaterPresenter: TranslaterPresenterProtocol {
     func sendRequest(with text: String){
         interactor?.getTranslateRequest(with: text)
     }
+}
+
+// MARK: - OutputInteractor
+
+extension TranslaterPresenter: OutputTranslatorInteractorProtocol {
+    func errTranslationFetched(with error: FetchError) {
+        self.view?.errDataFetch(with: error.localizedDescription)
+    }
     
     func translationCompletlyFetched(translation: TranslaterModel) {
         DispatchQueue.main.async {
@@ -46,22 +56,5 @@ final class TranslaterPresenter: TranslaterPresenterProtocol {
             self.view?.onTranslateCompletlyFetched(translation: translated)
         }
     }
- 
-    func errInternal() {
-        DispatchQueue.main.async {
-            self.view?.errTranslateDataFetched()
-        }
-    }
     
-    func errNoAuth() {
-        DispatchQueue.main.async {
-            self.view?.errAuthorization()
-        }
-    }
-    
-    func errNoTranslation() {
-        DispatchQueue.main.async {
-            self.view?.errNoTranslation()
-        }
-    }
 }

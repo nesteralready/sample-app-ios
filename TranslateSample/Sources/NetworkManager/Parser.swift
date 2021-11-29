@@ -9,7 +9,7 @@ import Foundation
 
 final class Parser {
     
-    // MARK: - Public MMethods
+    // MARK: - Public Methods
     
     func parseJSON<T:Decodable>(with data: Data) -> T? {
         let decoder = newJSONDecoder()
